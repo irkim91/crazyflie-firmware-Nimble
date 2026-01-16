@@ -32,7 +32,6 @@ obj-$(CONFIG_POWER_DISTRIBUTION_QUADROTOR) += power_distribution_quadrotor.o
 obj-$(CONFIG_POWER_DISTRIBUTION_FLAPPER) += power_distribution_flapper.o
 obj-y += pptraj_compressed.o
 obj-y += pptraj.o
-obj-y += qmc5883l.o					# add
 obj-y += queuemonitor.o
 obj-y += range.o
 obj-y += sensfusion6.o
@@ -50,6 +49,8 @@ obj-y += vcp_esc_passthrough.o
 obj-y += worker.o
 obj-y += i2c_dfu.o
 
+obj-y += m10g5883.o					# add
+obj-y += ubx_parser.o
 # Sub folders
 obj-$(CONFIG_ESTIMATOR_KALMAN_ENABLE) += kalman_core/
 obj-y += lighthouse/

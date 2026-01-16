@@ -1,0 +1,1 @@
+CFLAGS += -DDECK_FORCE=\"bcMti3\"

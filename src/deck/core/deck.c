@@ -26,12 +26,17 @@
 
 #define DEBUG_MODULE "DECK_CORE"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "deck.h"
 #include "deck_memory.h"
 #include "deckctrl_dfu_memory.h"
 #include "debug.h"
+
+#ifndef DECK_FORCE
+  #define DECK_FORCE bcMti3
+#endif
 
 #ifdef CONFIG_DEBUG
   #define DECK_CORE_DBG_PRINT(fmt, ...)  DEBUG_PRINT(fmt, ## __VA_ARGS__)

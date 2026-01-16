@@ -517,3 +517,9 @@ config DECK_COLORLED
     default y
     help
         Enables the support for Color LED deck.
+
+
+config DECK_M10G5883
+    bool "Support M10G-5883 GNSS/Mag Deck"
+    default n
+    select DECK_FORCE_SYNC 
