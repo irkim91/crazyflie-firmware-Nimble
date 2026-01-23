@@ -1,6 +1,8 @@
 #include "controller_manual.h"
 #include "log.h"
 #include "param.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 static struct {
   float rollScale;
@@ -16,8 +18,19 @@ static struct {
 
 static float cmd_thrust;
 static float cmd_roll;
-static float cmd_pitch;
-static float cmd_yaw;
+static int32_t limitCommand(int32_t value, int32_t min, int32_t max,
+                            bool *isCapped) {
+  if (value < min) {
+    return min;
+  }
+
+  if (value > max) {
+    *isCapped = true;
+    return max;
+  }
+
+  return value;
+}
 
 void controllerManualInit(void) {}
 
@@ -33,12 +46,26 @@ void controllerManual(control_t *control, const setpoint_t *setpoint,
   cmd_pitch = setpoint->attitude.pitch;
   cmd_yaw = setpoint->attitudeRate.yaw;
 
-  // Direct mapping of setpoint to control with scaling
-  control->thrust = setpoint->thrust * manualConfig.thrustScale;
-  control->roll = (int16_t)(setpoint->attitude.roll * manualConfig.rollScale);
+  // Direct mapping of setpoint to control with scaling and limiting
+  bool isCapped = false; // Shared flag, though distinct warning could be useful
+
+  int32_t raw_thrust = (int32_t)(setpoint->thrust * manualConfig.thrustScale);
+  control->thrust = (float)limitCommand(raw_thrust, 0, UINT16_MAX, &isCapped);
+
+  int32_t raw_roll =
+      (int32_t)(setpoint->attitude.roll * manualConfig.rollScale);
+  control->roll =
+      (int16_t)limitCommand(raw_roll, INT16_MIN, INT16_MAX, &isCapped);
+
+  int32_t raw_pitch =
+      (int32_t)(setpoint->attitude.pitch * manualConfig.pitchScale);
   control->pitch =
-      (int16_t)(setpoint->attitude.pitch * manualConfig.pitchScale);
-  control->yaw = (int16_t)(setpoint->attitudeRate.yaw * manualConfig.yawScale);
+      (int16_t)limitCommand(raw_pitch, INT16_MIN, INT16_MAX, &isCapped);
+
+  int32_t raw_yaw =
+      (int32_t)(setpoint->attitudeRate.yaw * manualConfig.yawScale);
+  control->yaw =
+      (int16_t)limitCommand(raw_yaw, INT16_MIN, INT16_MAX, &isCapped);
 }
 
 /**
