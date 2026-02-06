@@ -18,6 +18,9 @@ static struct {
 
 static float cmd_thrust;
 static float cmd_roll;
+static float cmd_pitch;
+static float cmd_yaw;
+
 static int32_t limitCommand(int32_t value, int32_t min, int32_t max,
                             bool *isCapped) {
   if (value < min) {
@@ -72,21 +75,9 @@ void controllerManual(control_t *control, const setpoint_t *setpoint,
  * Tuning settings for the manual controller
  */
 PARAM_GROUP_START(ctrlMan)
-/**
- * @brief Scaling factor for roll command (default: 1.0)
- */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, rollScale, &manualConfig.rollScale)
-/**
- * @brief Scaling factor for pitch command (default: 1.0)
- */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, pitchScale, &manualConfig.pitchScale)
-/**
- * @brief Scaling factor for yaw command (default: 1.0)
- */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, yawScale, &manualConfig.yawScale)
-/**
- * @brief Scaling factor for thrust command (default: 65535.0)
- */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, thrustScale,
           &manualConfig.thrustScale)
 PARAM_GROUP_STOP(ctrlMan)
